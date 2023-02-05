@@ -30,17 +30,6 @@ int ceiling(float f) {
   return i + 1;
 }
 
-void print_uint256(UInt256 val) {
-  printf("New value: \n");
-  for (int i = 0; i < 4; ++i) {
-    for (int j = 0; j < 64; ++j) {
-      int bitVal = (val.data[i] & (1UL << j)) == 0 ? 0 : 1;
-      printf("%d", bitVal);
-    }
-    printf("\n");
-  }
-}
-
 void copy_substring(char *buffer, const char *source, int offset) {
   for (int i = 15; i >= 0; --i) {
     buffer[i] = offset + i >= 0 ? source[offset + i] : '0';
@@ -63,7 +52,30 @@ UInt256 uint256_create_from_hex(const char *hex) {
 
 // Return a dynamically-allocated string of hex digits representing the
 // given UInt256 value.
-char *uint256_format_as_hex(UInt256 val) { return NULL; }
+char *uint256_format_as_hex(UInt256 val) {
+  char buffer[65];
+  sprintf(buffer, "%016lx%016lx%016lx%016lx", val.data[3], val.data[2],
+          val.data[1], val.data[0]);
+
+  int i = 0;
+  while (buffer[i] == '0' && i < 64)
+    ++i;
+
+  int new_len = 64 - i;
+  char *result;
+  if (!new_len) {
+    result = malloc(2 * sizeof(char));
+    result[0] = '0', result[1] = '\0';
+  } else {
+    result = malloc((new_len + 1) * sizeof(char));
+    for (int j = 0; j < new_len; ++j) {
+      result[j] = buffer[i + j];
+    }
+    result[new_len] = '\0';
+  }
+
+  return result;
+}
 
 // Get 64 bits of data from a UInt256 value.
 // Index 0 is the least significant 64 bits, index 3 is the most
@@ -111,15 +123,11 @@ UInt256 leftshift(UInt256 val, int shift) {
     if (i + shift >= 256)
       continue;
 
-    // printf("shifting %d to %d\n", i, i + shift);
-
     int repIndex = (i + shift) / 64;
     int repExtra = (i + shift) % 64;
 
     int curBit = ith_bit_set(val, i);
     int repBit = ith_bit_set(val, i + shift);
-
-    // printf("%d is %d while %d is %d\n\n", i, curBit, i + shift, repBit);
 
     if (curBit == repBit)
       continue;
