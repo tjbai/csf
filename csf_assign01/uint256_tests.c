@@ -38,10 +38,18 @@ void test_mul_1(TestObjs *objs);
 void test_mul_2(TestObjs *objs);
 
 // Custom tests declarations
+void test_add_0(TestObjs *objs);
 void test_add_positive_overflow(TestObjs *objs);
+void test_sub_0(TestObjs *objs);
 void test_sub_negative_overflow(TestObjs *objs);
 void test_simple_mul();
 void test_simple_sub();
+void test_add_genfact_1();
+void test_add_genfact_2();
+void test_sub_genfact_1();
+void test_sub_genfact_2();
+void test_mul_genfact_1();
+void test_mul_genfact_2();
 
 int main(int argc, char **argv) {
   if (argc > 1) {
@@ -67,6 +75,12 @@ int main(int argc, char **argv) {
   TEST(test_sub_negative_overflow);
   TEST(test_simple_mul);
   TEST(test_simple_sub);
+  TEST(test_add_genfact_1);
+  TEST(test_add_genfact_2);
+  TEST(test_sub_genfact_1);
+  TEST(test_sub_genfact_2);
+  TEST(test_mul_genfact_1);
+  TEST(test_mul_genfact_2);
 
   TEST_FINI();
 }
@@ -168,6 +182,23 @@ void test_format_as_hex(TestObjs *objs) {
   free(s);
 }
 
+void test_add_0(TestObjs *objs) {
+  UInt256 left, right, result;
+
+  // 4db67a5fd770167f0139fb6587483f8e5f32efea965da9cf7a11076cbe01c70 +
+  // 0 = 4db67a5fd770167f0139fb6587483f8e5f32efea965da9cf7a11076cbe01c70
+  left.data[0] = 0xf7a11076cbe01c70UL;
+  left.data[1] = 0xe5f32efea965da9cUL;
+  left.data[2] = 0xf0139fb6587483f8UL;
+  left.data[3] = 0x4db67a5fd770167UL;
+  objs->zero = uint256_create_from_u64(0U);
+  result = uint256_add(left, objs->zero);
+  ASSERT(0xf7a11076cbe01c70UL == result.data[0]);
+  ASSERT(0xe5f32efea965da9cUL == result.data[1]);
+  ASSERT(0xf0139fb6587483f8UL == result.data[2]);
+  ASSERT(0x4db67a5fd770167UL == result.data[3]);
+}
+
 void test_add_1(TestObjs *objs) {
   // basic addition tests
 
@@ -238,12 +269,71 @@ void test_add_positive_overflow(TestObjs *objs) {
   }
 }
 
+void test_add_genfact_1() {
+  UInt256 left, right, result;
+
+  // d56ba10baeb819c954e4ba3e4510dc85d33383857afa15f80fa6ae118ceeead + 
+  // eb88e1067ee70ecba403a4d7d11d77d4c29df747b82aa7e6f0244537aadcd6c = 
+  // 1c0f482122d9f2894f8e85f16162e545a95d17acd3324bddeffcaf34937cbc19
+  left.data[0] = 0x80fa6ae118ceeeadUL;
+  left.data[1] = 0x5d33383857afa15fUL;
+  left.data[2] = 0x954e4ba3e4510dc8UL;
+  left.data[3] = 0xd56ba10baeb819cUL;
+  right.data[0] = 0x6f0244537aadcd6cUL;
+  right.data[1] = 0x4c29df747b82aa7eUL;
+  right.data[2] = 0xba403a4d7d11d77dUL;
+  right.data[3] = 0xeb88e1067ee70ecUL;
+  result = uint256_add(left, right);
+  ASSERT(0xeffcaf34937cbc19UL == result.data[0]);
+  ASSERT(0xa95d17acd3324bddUL == result.data[1]);
+  ASSERT(0x4f8e85f16162e545UL == result.data[2]);
+  ASSERT(0x1c0f482122d9f289UL == result.data[3]);
+}
+
+void test_add_genfact_2() {
+  UInt256 left, right, result;
+
+  // 8e64799a2a9b5124bd8c9ab21f245a477b362a3b471876e16b8edac2b9ff21e + 
+  // dbf9ba46e5fea8f5c32fdb253be6a8933dac09726061a09c91811f0eeffab3d = 
+  // 16a5e33e11099fa1a80bc75d75b0b02dab8e233ada77a177dfd0ff9d1a9f9d5b
+  left.data[0] = 0x16b8edac2b9ff21eUL;
+  left.data[1] = 0x77b362a3b471876eUL;
+  left.data[2] = 0x4bd8c9ab21f245a4UL;
+  left.data[3] = 0x8e64799a2a9b512UL;
+  right.data[0] = 0xc91811f0eeffab3dUL;
+  right.data[1] = 0x33dac09726061a09UL;
+  right.data[2] = 0x5c32fdb253be6a89UL;
+  right.data[3] = 0xdbf9ba46e5fea8fUL;
+  result = uint256_add(left, right);
+  ASSERT(0xdfd0ff9d1a9f9d5bUL == result.data[0]);
+  ASSERT(0xab8e233ada77a177UL == result.data[1]);
+  ASSERT(0xa80bc75d75b0b02dUL == result.data[2]);
+  ASSERT(0x16a5e33e11099fa1UL == result.data[3]);
+}
+
 void test_simple_sub() {
   UInt256 left = {{~0UL, ~0UL, 0UL, 0UL}};
   UInt256 right = {{3UL, 0UL, 0UL, 0UL}};
   UInt256 res = uint256_sub(left, right);
   ASSERT(res.data[0] == ~0UL - 3UL);
   ASSERT(res.data[1] == ~0UL);
+}
+
+void test_sub_0(TestObjs *objs) {
+  UInt256 left, right, result;
+
+  // 5fc5363b1c3b09b0bb7392ef10f6c458703f2f31c08e0a442b6b15c56a6af26 - 
+  // 0 = 5fc5363b1c3b09b0bb7392ef10f6c458703f2f31c08e0a442b6b15c56a6af26
+  left.data[0] = 0x42b6b15c56a6af26UL;
+  left.data[1] = 0x8703f2f31c08e0a4UL;
+  left.data[2] = 0x0bb7392ef10f6c45UL;
+  left.data[3] = 0x5fc5363b1c3b09bUL;
+  objs->zero = uint256_create_from_u64(0U);
+  result = uint256_sub(left, objs->zero);
+  ASSERT(0x42b6b15c56a6af26UL == result.data[0]);
+  ASSERT(0x8703f2f31c08e0a4UL == result.data[1]);
+  ASSERT(0x0bb7392ef10f6c45UL == result.data[2]);
+  ASSERT(0x5fc5363b1c3b09bUL == result.data[3]);
 }
 
 void test_sub_1(TestObjs *objs) {
@@ -314,6 +404,48 @@ void test_sub_negative_overflow(TestObjs *objs) {
   }
 }
 
+void test_sub_genfact_1() { 
+  UInt256 left, right, result;
+
+  // 18a3ad8c5edb7debb667148a09abfefe685709ece99c39ae439bf8b8dac4210 - 
+  // 6ae64b688c7d80b1a7a7a75ef8982993b7757200e5679d066ff3f19449403c = 
+  // 11f548d5d613a5e09bec9a141a227c652cdfb2ccdb45bfdddc9cb99f96301d4
+  left.data[0] = 0xe439bf8b8dac4210UL;
+  left.data[1] = 0xe685709ece99c39aUL;
+  left.data[2] = 0xbb667148a09abfefUL;
+  left.data[3] = 0x18a3ad8c5edb7deUL;
+  right.data[0] = 0x066ff3f19449403cUL;
+  right.data[1] = 0x93b7757200e5679dUL;
+  right.data[2] = 0xb1a7a7a75ef89829UL;
+  right.data[3] = 0x6ae64b688c7d80UL;
+  result = uint256_sub(left, right);
+  ASSERT(0xddc9cb99f96301d4UL == result.data[0]);
+  ASSERT(0x52cdfb2ccdb45bfdUL == result.data[1]);
+  ASSERT(0x09bec9a141a227c6UL == result.data[2]);
+  ASSERT(0x11f548d5d613a5eUL == result.data[3]);
+}
+
+void test_sub_genfact_2() { 
+  UInt256 left, right, result;
+
+  // cdd11898c75b8bcc5d333428ca1c01f064ff8bad5d558095a47c83423acafd7 - 
+  // 411a13c74ef35b19eef07d63da91d84a23237937dd530f8d41382fede3c23a = 
+  // c9bf775c526c561abe442c528c72e46bc2cd5419df804f9cd06900435c8ed9d
+  left.data[0] = 0x5a47c83423acafd7UL;
+  left.data[1] = 0x064ff8bad5d55809UL;
+  left.data[2] = 0xc5d333428ca1c01fUL;
+  left.data[3] = 0xcdd11898c75b8bcUL;
+  right.data[0] = 0x8d41382fede3c23aUL;
+  right.data[1] = 0x4a23237937dd530fUL;
+  right.data[2] = 0x19eef07d63da91d8UL;
+  right.data[3] = 0x411a13c74ef35bUL;
+  result = uint256_sub(left, right);
+  ASSERT(0xcd06900435c8ed9dUL == result.data[0]);
+  ASSERT(0xbc2cd5419df804f9UL == result.data[1]);
+  ASSERT(0xabe442c528c72e46UL == result.data[2]);
+  ASSERT(0xc9bf775c526c561UL == result.data[3]);
+}
+
 void test_simple_mul() {
   UInt256 big_thing = uint256_create_from_u64(~0UL);
   UInt256 four = uint256_create_from_u64(4UL);
@@ -352,4 +484,47 @@ void test_mul_2(TestObjs *objs) {
   ASSERT(0xe6117fa57cddf52eUL == result.data[1]);
   ASSERT(0x61abad710163aa9bUL == result.data[2]);
   ASSERT(0x991f2125eacd3UL == result.data[3]);
+}
+
+void test_mul_genfact_1() { 
+  UInt256 left, right, result;
+
+  // 1387158fa5d3229be8b448f3e7429f0 * 
+  // b3255cb4a4d58b7b6e7b29f2a4a84af = 
+  //    daa4dabe20335278cb398925ce46ed9ed0f29e505f9c951a132a516686b10
+  // 4444444444444444333333333333333322222222222222221111111111111111
+  left.data[0] = 0xbe8b448f3e7429f0UL;
+  left.data[1] = 0x1387158fa5d3229UL;
+  left.data[2] = 0UL;
+  left.data[3] = 0UL;
+  right.data[0] = 0xb6e7b29f2a4a84afUL;
+  right.data[1] = 0xb3255cb4a4d58b7UL;
+  right.data[2] = 0UL;
+  right.data[3] = 0UL;
+  result = uint256_mul(left, right);
+  ASSERT(0x51a132a516686b10UL == result.data[0]);
+  ASSERT(0xd9ed0f29e505f9c9UL == result.data[1]);
+  ASSERT(0x278cb398925ce46eUL == result.data[2]);
+  ASSERT(0xdaa4dabe20335UL == result.data[3]);
+}
+
+void test_mul_genfact_2() { 
+  UInt256 left, right, result;
+
+  // 3bc67a0b2f5be075e31640d220e711c * 
+  // 541e8507868308b0e8ef980621a5b94 = 
+  // 13a4405dd81754cdd49fb126aa68bab088868b900219268c42497707665830
+  left.data[0] = 0x5e31640d220e711cUL;
+  left.data[1] = 0x3bc67a0b2f5be07UL;
+  left.data[2] = 0UL;
+  left.data[3] = 0UL;
+  right.data[0] = 0x0e8ef980621a5b94UL;
+  right.data[1] = 0x541e8507868308bUL;
+  right.data[2] = 0UL;
+  right.data[3] = 0UL;
+  result = uint256_mul(left, right);
+  ASSERT(0x8c42497707665830UL == result.data[0]);
+  ASSERT(0xb088868b90021926UL == result.data[1]);
+  ASSERT(0xcdd49fb126aa68baUL == result.data[2]);
+  ASSERT(0x13a4405dd81754UL == result.data[3]);
 }
