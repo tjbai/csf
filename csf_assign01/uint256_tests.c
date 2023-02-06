@@ -55,6 +55,8 @@ void test_create_from_hex_longer_than_64();
 void test_create_from_hex_shorter_than_64();
 void test_format_as_big_hex();
 void test_format_as_hex_shorter_than_64();
+void test_mul_1_big(TestObjs *objs);
+void test_mul_0_big(TestObjs *objs);
 
 
 int main(int argc, char **argv) {
@@ -92,7 +94,8 @@ int main(int argc, char **argv) {
   TEST(test_create_from_hex_shorter_than_64);
   TEST(test_format_as_big_hex);
   TEST(test_format_as_hex_shorter_than_64);
-
+  TEST(test_mul_1_big);
+  TEST(test_mul_0_big);
 
   TEST_FINI();
 }
@@ -543,6 +546,38 @@ void test_mul_1(TestObjs *objs) {
 
   result = uint256_mul(objs->one, objs->zero);
   ASSERT(check(result, 0UL, 0UL, 0UL, 0UL));
+}
+
+void test_mul_1_big(TestObjs *objs) {
+  UInt256 left, result;
+
+  // 1159b14e3e852321ede4512ddf84eab524a34e431a9308de2b4b9e16b54ae0 * 1
+  // = 1159b14e3e852321ede4512ddf84eab524a34e431a9308de2b4b9e16b54ae0
+  left.data[0] = 0xde2b4b9e16b54ae0UL;
+  left.data[1] = 0xb524a34e431a9308UL;
+  left.data[2] = 0x21ede4512ddf84eaUL;
+  left.data[3] = 0x1159b14e3e8523UL;
+  result = uint256_mul(left, objs->one);
+  ASSERT(0xde2b4b9e16b54ae0UL == result.data[0]);
+  ASSERT(0xb524a34e431a9308UL == result.data[1]);
+  ASSERT(0x21ede4512ddf84eaUL == result.data[2]);
+  ASSERT(0x1159b14e3e8523UL == result.data[3]);
+}
+
+void test_mul_0_big(TestObjs *objs) {
+  UInt256 right, result;
+
+  // 1159b14e3e852321ede4512ddf84eab524a34e431a9308de2b4b9e16b54ae0 * 1
+  // = 1159b14e3e852321ede4512ddf84eab524a34e431a9308de2b4b9e16b54ae0
+  right.data[0] = 0xde2b4b9e16b54ae0UL;
+  right.data[1] = 0xb524a34e431a9308UL;
+  right.data[2] = 0x21ede4512ddf84eaUL;
+  right.data[3] = 0x1159b14e3e8523UL;
+  result = uint256_mul(objs->zero, right);
+  ASSERT(0UL == result.data[0]);
+  ASSERT(0UL == result.data[1]);
+  ASSERT(0UL == result.data[2]);
+  ASSERT(0UL == result.data[3]);
 }
 
 void test_mul_2(TestObjs *objs) {
