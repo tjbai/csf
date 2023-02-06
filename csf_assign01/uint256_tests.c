@@ -50,6 +50,7 @@ void test_sub_genfact_1();
 void test_sub_genfact_2();
 void test_mul_genfact_1();
 void test_mul_genfact_2();
+void test_sub_itself(TestObjs *objs);
 
 int main(int argc, char **argv) {
   if (argc > 1) {
@@ -81,6 +82,7 @@ int main(int argc, char **argv) {
   TEST(test_sub_genfact_2);
   TEST(test_mul_genfact_1);
   TEST(test_mul_genfact_2);
+  TEST(test_sub_itself);
 
   TEST_FINI();
 }
@@ -397,6 +399,31 @@ void test_sub_3(TestObjs *objs) {
   ASSERT(0x4a4b72ebb654226UL == result.data[3]);
 }
 
+void test_sub_itself(TestObjs *objs) {
+  // "large" subtraction tests
+
+  (void)objs;
+
+  UInt256 left, right, result;
+
+  // bc556287a225313cc07a1509f4ebb335034f5d413945ac7d0bdb42962a6ae8c -
+  // 7209ef9bebd10ecdc8fb3ccc6c9c69f41f2b217da808c18793c019c3cabaddc =
+  // 4a4b72ebb654226ef77ed83d884f4940e4243bc3913ceaf5781b28d25fb00b0
+  left.data[0] = 0xd0bdb42962a6ae8cUL;
+  left.data[1] = 0x5034f5d413945ac7UL;
+  left.data[2] = 0xcc07a1509f4ebb33UL;
+  left.data[3] = 0xbc556287a225313UL;
+  right.data[0] = 0xd0bdb42962a6ae8cUL;
+  right.data[1] = 0x5034f5d413945ac7UL;
+  right.data[2] = 0xcc07a1509f4ebb33UL;
+  right.data[3] = 0xbc556287a225313UL;
+  result = uint256_sub(left, right);
+  ASSERT(0UL == result.data[0]);
+  ASSERT(0UL == result.data[1]);
+  ASSERT(0UL == result.data[2]);
+  ASSERT(0UL == result.data[3]);
+}
+
 void test_sub_negative_overflow(TestObjs *objs) {
   UInt256 res = uint256_sub(objs->zero, objs->one);
   for (int i = 0; i < 4; ++i) {
@@ -489,23 +516,22 @@ void test_mul_2(TestObjs *objs) {
 void test_mul_genfact_1() { 
   UInt256 left, right, result;
 
-  // 1387158fa5d3229be8b448f3e7429f0 * 
-  // b3255cb4a4d58b7b6e7b29f2a4a84af = 
-  //    daa4dabe20335278cb398925ce46ed9ed0f29e505f9c951a132a516686b10
-  // 4444444444444444333333333333333322222222222222221111111111111111
-  left.data[0] = 0xbe8b448f3e7429f0UL;
-  left.data[1] = 0x1387158fa5d3229UL;
+  // 2fa069a56ab19b5a2980d469e30a337 * 
+  // f22c1f9954d30055f28b6921e6d13fa = 
+  // 2d0dd9517abc4b1b8c6c8da9e611d71089160bfd60adb8b47271e8080778b6
+  left.data[0] = 0xa2980d469e30a337UL;
+  left.data[1] = 0x2fa069a56ab19b5UL;
   left.data[2] = 0UL;
   left.data[3] = 0UL;
-  right.data[0] = 0xb6e7b29f2a4a84afUL;
-  right.data[1] = 0xb3255cb4a4d58b7UL;
+  right.data[0] = 0x5f28b6921e6d13faUL;
+  right.data[1] = 0xf22c1f9954d3005UL;
   right.data[2] = 0UL;
   right.data[3] = 0UL;
   result = uint256_mul(left, right);
-  ASSERT(0x51a132a516686b10UL == result.data[0]);
-  ASSERT(0xd9ed0f29e505f9c9UL == result.data[1]);
-  ASSERT(0x278cb398925ce46eUL == result.data[2]);
-  ASSERT(0xdaa4dabe20335UL == result.data[3]);
+  ASSERT(0xb47271e8080778b6UL == result.data[0]);
+  ASSERT(0x1089160bfd60adb8UL == result.data[1]);
+  ASSERT(0x1b8c6c8da9e611d7UL == result.data[2]);
+  ASSERT(0x2d0dd9517abc4bUL == result.data[3]);
 }
 
 void test_mul_genfact_2() { 
