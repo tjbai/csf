@@ -141,7 +141,13 @@ UInt256 leftshift(UInt256 val, int shift) {
   }
 
   return res;
-}
+} 
+// write small unit tests for left shift
+// multiply number by 2
+// test shifts > 64
+// test, style, efficiency
+// add basic cases and random numbers
+// test important helper functions
 
 // Compute the product of two UInt256 values.
 UInt256 uint256_mul(UInt256 left, UInt256 right) {

@@ -59,6 +59,7 @@ void test_format_as_big_hex();
 void test_format_as_hex_shorter_than_64();
 void test_mul_1_big(TestObjs *objs);
 void test_mul_0_big(TestObjs *objs);
+void test_add_1_to_random(TestObjs *objs);
 
 int main(int argc, char **argv) {
   if (argc > 1) {
@@ -80,6 +81,8 @@ int main(int argc, char **argv) {
   TEST(test_sub_3);
   TEST(test_mul_1);
   TEST(test_mul_2);
+
+  TEST(test_add_1_to_random);
 
   TEST(test_add_positive_overflow);
   TEST(test_sub_negative_overflow);
@@ -254,6 +257,24 @@ void test_add_1(TestObjs *objs) {
   ASSERT(0UL == sum.data[2]);
   ASSERT(0UL == sum.data[1]);
   ASSERT(1UL == sum.data[0]);
+}
+
+void test_add_1_to_random(TestObjs *objs) {
+  UInt256 left, sum;
+
+  //  225914b6ef8e303e43f5ad74fbeb113e08d6d81f400eabdbb8bc0f9f765b321
+  // 4444444444444444333333333333333322222222222222221111111111111111
+  left.data[0] = 0xbb8bc0f9f765b321UL;
+  left.data[1] = 0xe08d6d81f400eabdUL;
+  left.data[2] = 0xe43f5ad74fbeb113UL;
+  left.data[3] = 0x225914b6ef8e303UL;
+
+  sum = uint256_add(left, objs->one);
+
+  ASSERT(0x225914b6ef8e303UL == sum.data[3]);
+  ASSERT(0xe43f5ad74fbeb113UL == sum.data[2]);
+  ASSERT(0xe08d6d81f400eabdUL == sum.data[1]);
+  ASSERT(0xbb8bc0f9f765b322UL == sum.data[0]);
 }
 
 void test_add_2(TestObjs *objs) {
@@ -694,8 +715,13 @@ void test_format_as_hex_shorter_than_64() {
 //   left.data[2] = 0UL;
 //   left.data[3] = 0UL;
 //   result = uint256_mul(left, right);
+//   printf("%s", uint256_format_as_hex(result));
 //   ASSERT(0x69f06e1f688f692aUL == result.data[0]);
 //   ASSERT(0xba31be8f9926a12cUL == result.data[1]);
 //   ASSERT(0x3754b9d5ff38fc41UL == result.data[2]);
 //   ASSERT(0x537affb66b3106UL == result.data[3]);
+//   // 537affb66b310636
+//   // d426cdff38a6a465
+//   // 9fda0856ef178f98
+//   // 69f06e1f688f692a
 // }
