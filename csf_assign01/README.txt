@@ -1,3 +1,5 @@
-Me and Halle Cho worked together. We pair-programmed this
-assignment so we each contributed to all 3 functions and our
-contributions were roughly equal.
+Halle Cho and TJ Bai pair programmed for the majority of this assignment.
+
+For debugging and writing tests, Halle Cho worked primarily on the 
+tests related to create_from_hex() and format_as_hex() whereas
+TJ Bai worked primarily on addition, subtraction, and multiplication.
