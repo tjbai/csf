@@ -53,6 +53,8 @@ void test_mul_genfact_2();
 void test_sub_itself(TestObjs *objs);
 void test_create_from_hex_longer_than_64();
 void test_create_from_hex_shorter_than_64();
+void test_format_as_big_hex();
+void test_format_as_hex_shorter_than_64();
 
 
 int main(int argc, char **argv) {
@@ -87,7 +89,9 @@ int main(int argc, char **argv) {
   TEST(test_mul_genfact_2);
   TEST(test_sub_itself);
   TEST(test_create_from_hex_longer_than_64);
-  TEST(test_create_from_hex_longer_than_64);
+  TEST(test_create_from_hex_shorter_than_64);
+  TEST(test_format_as_big_hex);
+  TEST(test_format_as_hex_shorter_than_64);
 
 
   TEST_FINI();
@@ -208,10 +212,34 @@ void test_format_as_hex(TestObjs *objs) {
   free(s);
 }
 
+void test_format_as_big_hex() {
+  char *s;
+  UInt256 val;
+  val.data[0] = ~(0UL);
+  val.data[1] = ~(0UL);
+  val.data[2] = ~(0UL);
+  val.data[3] = ~(0UL);
 
+  s = uint256_format_as_hex(val);
+  ASSERT(0 == strcmp("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", s));
+  free(s);
+}
+
+void test_format_as_hex_shorter_than_64() {
+  char *s;
+  UInt256 val;
+  val.data[0] = 0x7a055816a0ae11b7UL;
+  val.data[1] = 0xcd8c5e6af3a5467UL;
+  val.data[2] = 0UL;
+  val.data[3] = 0UL;
+
+  s = uint256_format_as_hex(val);
+  ASSERT(0 == strcmp("cd8c5e6af3a54677a055816a0ae11b7", s));
+  free(s);
+}
 
 void test_add_0(TestObjs *objs) {
-  UInt256 left, right, result;
+  UInt256 left, result;
 
   // 4db67a5fd770167f0139fb6587483f8e5f32efea965da9cf7a11076cbe01c70 +
   // 0 = 4db67a5fd770167f0139fb6587483f8e5f32efea965da9cf7a11076cbe01c70
@@ -348,7 +376,7 @@ void test_simple_sub() {
 }
 
 void test_sub_0(TestObjs *objs) {
-  UInt256 left, right, result;
+  UInt256 left, result;
 
   // 5fc5363b1c3b09b0bb7392ef10f6c458703f2f31c08e0a442b6b15c56a6af26 - 
   // 0 = 5fc5363b1c3b09b0bb7392ef10f6c458703f2f31c08e0a442b6b15c56a6af26
