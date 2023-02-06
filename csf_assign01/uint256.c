@@ -50,6 +50,11 @@ UInt256 uint256_create_from_hex(const char *hex) {
   return res;
 }
 
+// HEY HEY THIS IS A TEST CHANGE
+void foo() {
+  printf("%s\n", 'hey');
+}
+
 // Return a dynamically-allocated string of hex digits representing the
 // given UInt256 value.
 char *uint256_format_as_hex(UInt256 val) {
