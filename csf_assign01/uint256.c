@@ -127,7 +127,6 @@ UInt256 leftshift(UInt256 val, int shift) {
     int repExtra = (i + shift) % 64;
 
     int curBit = ith_bit_set(val, i);
-    int repBit = ith_bit_set(val, i + shift);
 
     if (curBit)
       res.data[repIndex] |= 1UL << repExtra;

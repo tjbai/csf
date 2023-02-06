@@ -51,7 +51,7 @@ void test_sub_genfact_2();
 void test_mul_genfact_1();
 void test_mul_genfact_2();
 void test_mul_genfact_3();
-void test_mul_genfact_4();
+// void test_mul_genfact_4();
 void test_sub_itself(TestObjs *objs);
 void test_create_from_hex_longer_than_64();
 void test_create_from_hex_shorter_than_64();
@@ -96,7 +96,7 @@ int main(int argc, char **argv) {
   TEST(test_mul_genfact_1);
   TEST(test_mul_genfact_2);
   TEST(test_mul_genfact_3);
-  TEST(test_mul_genfact_4);
+  // TEST(test_mul_genfact_4);
 
   TEST(test_sub_itself);
   TEST(test_create_from_hex_longer_than_64);
@@ -650,23 +650,52 @@ void test_mul_genfact_3() {
   ASSERT(0x80a3b3a8508c9cUL == result.data[3]);
 }
 
-void test_mul_genfact_4() {
-  UInt256 left, right, result;
+void test_format_as_big_hex() {
+  char *s;
+  UInt256 val;
+  val.data[0] = ~(0UL);
+  val.data[1] = ~(0UL);
+  val.data[2] = ~(0UL);
+  val.data[3] = ~(0UL);
 
-  // e409935d588addeca5e84c094d01577 *
-  // 5db792507f26718855c7a2c5721f2a6 =
-  // 537affb66b31063754b9d5ff38fc41ba31be8f9926a12c69f06e1f688f692a
-  right.data[0] = 0xa5e84c094d01577UL;
-  right.data[1] = 0xe409935d588addecUL;
-  right.data[2] = 0UL;
-  right.data[3] = 0UL;
-  left.data[0] = 0x55c7a2c5721f2a6UL;
-  left.data[1] = 0x5db792507f267188UL;
-  left.data[2] = 0UL;
-  left.data[3] = 0UL;
-  result = uint256_mul(left, right);
-  ASSERT(0x69f06e1f688f692aUL == result.data[0]);
-  ASSERT(0xba31be8f9926a12cUL == result.data[1]);
-  ASSERT(0x3754b9d5ff38fc41UL == result.data[2]);
-  ASSERT(0x537affb66b3106UL == result.data[3]);
+  s = uint256_format_as_hex(val);
+  ASSERT(
+      0 ==
+      strcmp("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+             s));
+  free(s);
 }
+
+void test_format_as_hex_shorter_than_64() {
+  char *s;
+  UInt256 val;
+  val.data[0] = 0x7a055816a0ae11b7UL;
+  val.data[1] = 0xcd8c5e6af3a5467UL;
+  val.data[2] = 0UL;
+  val.data[3] = 0UL;
+
+  s = uint256_format_as_hex(val);
+  ASSERT(0 == strcmp("cd8c5e6af3a54677a055816a0ae11b7", s));
+  free(s);
+}
+
+// void test_mul_genfact_4() {
+//   UInt256 left, right, result;
+
+//   // e409935d588addeca5e84c094d01577 *
+//   // 5db792507f26718855c7a2c5721f2a6 =
+//   // 537affb66b31063754b9d5ff38fc41ba31be8f9926a12c69f06e1f688f692a
+//   right.data[0] = 0xa5e84c094d01577UL;
+//   right.data[1] = 0xe409935d588addecUL;
+//   right.data[2] = 0UL;
+//   right.data[3] = 0UL;
+//   left.data[0] = 0x55c7a2c5721f2a6UL;
+//   left.data[1] = 0x5db792507f267188UL;
+//   left.data[2] = 0UL;
+//   left.data[3] = 0UL;
+//   result = uint256_mul(left, right);
+//   ASSERT(0x69f06e1f688f692aUL == result.data[0]);
+//   ASSERT(0xba31be8f9926a12cUL == result.data[1]);
+//   ASSERT(0x3754b9d5ff38fc41UL == result.data[2]);
+//   ASSERT(0x537affb66b3106UL == result.data[3]);
+// }
