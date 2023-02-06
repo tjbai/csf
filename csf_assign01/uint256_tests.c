@@ -50,10 +50,11 @@ void test_sub_genfact_1();
 void test_sub_genfact_2();
 void test_mul_genfact_1();
 void test_mul_genfact_2();
+void test_mul_genfact_3();
+void test_mul_genfact_4();
 void test_sub_itself(TestObjs *objs);
 void test_create_from_hex_longer_than_64();
 void test_create_from_hex_shorter_than_64();
-
 
 int main(int argc, char **argv) {
   if (argc > 1) {
@@ -75,20 +76,27 @@ int main(int argc, char **argv) {
   TEST(test_sub_3);
   TEST(test_mul_1);
   TEST(test_mul_2);
+
   TEST(test_add_positive_overflow);
   TEST(test_sub_negative_overflow);
+
   TEST(test_simple_mul);
   TEST(test_simple_sub);
+
   TEST(test_add_genfact_1);
   TEST(test_add_genfact_2);
+
   TEST(test_sub_genfact_1);
   TEST(test_sub_genfact_2);
+
   TEST(test_mul_genfact_1);
   TEST(test_mul_genfact_2);
+  TEST(test_mul_genfact_3);
+  TEST(test_mul_genfact_4);
+
   TEST(test_sub_itself);
   TEST(test_create_from_hex_longer_than_64);
   TEST(test_create_from_hex_longer_than_64);
-
 
   TEST_FINI();
 }
@@ -180,7 +188,8 @@ void test_create_from_hex(TestObjs *objs) {
 
 void test_create_from_hex_longer_than_64() {
   UInt256 val;
-  val = uint256_create_from_hex("9c6037f9119d850b26d16149ad06ebc03e1d75da171ad209df383b10d5237d12f12de");
+  val = uint256_create_from_hex(
+      "9c6037f9119d850b26d16149ad06ebc03e1d75da171ad209df383b10d5237d12f12de");
   ASSERT(12757943719096685278UL == val.data[0]);
   ASSERT(6746798705168216963UL == val.data[1]);
   ASSERT(1484728201191350743UL == val.data[2]);
@@ -189,7 +198,8 @@ void test_create_from_hex_longer_than_64() {
 
 void test_create_from_hex_shorter_than_64() {
   UInt256 val;
-  val = uint256_create_from_hex("19571d4e351c4ebb9119b2fa7ee235aada709ec41f986");
+  val =
+      uint256_create_from_hex("19571d4e351c4ebb9119b2fa7ee235aada709ec41f986");
   ASSERT(6534062295444748678UL == val.data[0]);
   ASSERT(16985626827821674019UL == val.data[1]);
   ASSERT(445791112221124UL == val.data[2]);
@@ -207,8 +217,6 @@ void test_format_as_hex(TestObjs *objs) {
   ASSERT(0 == strcmp("1", s));
   free(s);
 }
-
-
 
 void test_add_0(TestObjs *objs) {
   UInt256 left, right, result;
@@ -300,8 +308,8 @@ void test_add_positive_overflow(TestObjs *objs) {
 void test_add_genfact_1() {
   UInt256 left, right, result;
 
-  // d56ba10baeb819c954e4ba3e4510dc85d33383857afa15f80fa6ae118ceeead + 
-  // eb88e1067ee70ecba403a4d7d11d77d4c29df747b82aa7e6f0244537aadcd6c = 
+  // d56ba10baeb819c954e4ba3e4510dc85d33383857afa15f80fa6ae118ceeead +
+  // eb88e1067ee70ecba403a4d7d11d77d4c29df747b82aa7e6f0244537aadcd6c =
   // 1c0f482122d9f2894f8e85f16162e545a95d17acd3324bddeffcaf34937cbc19
   left.data[0] = 0x80fa6ae118ceeeadUL;
   left.data[1] = 0x5d33383857afa15fUL;
@@ -321,8 +329,8 @@ void test_add_genfact_1() {
 void test_add_genfact_2() {
   UInt256 left, right, result;
 
-  // 8e64799a2a9b5124bd8c9ab21f245a477b362a3b471876e16b8edac2b9ff21e + 
-  // dbf9ba46e5fea8f5c32fdb253be6a8933dac09726061a09c91811f0eeffab3d = 
+  // 8e64799a2a9b5124bd8c9ab21f245a477b362a3b471876e16b8edac2b9ff21e +
+  // dbf9ba46e5fea8f5c32fdb253be6a8933dac09726061a09c91811f0eeffab3d =
   // 16a5e33e11099fa1a80bc75d75b0b02dab8e233ada77a177dfd0ff9d1a9f9d5b
   left.data[0] = 0x16b8edac2b9ff21eUL;
   left.data[1] = 0x77b362a3b471876eUL;
@@ -350,7 +358,7 @@ void test_simple_sub() {
 void test_sub_0(TestObjs *objs) {
   UInt256 left, right, result;
 
-  // 5fc5363b1c3b09b0bb7392ef10f6c458703f2f31c08e0a442b6b15c56a6af26 - 
+  // 5fc5363b1c3b09b0bb7392ef10f6c458703f2f31c08e0a442b6b15c56a6af26 -
   // 0 = 5fc5363b1c3b09b0bb7392ef10f6c458703f2f31c08e0a442b6b15c56a6af26
   left.data[0] = 0x42b6b15c56a6af26UL;
   left.data[1] = 0x8703f2f31c08e0a4UL;
@@ -457,11 +465,11 @@ void test_sub_negative_overflow(TestObjs *objs) {
   }
 }
 
-void test_sub_genfact_1() { 
+void test_sub_genfact_1() {
   UInt256 left, right, result;
 
-  // 18a3ad8c5edb7debb667148a09abfefe685709ece99c39ae439bf8b8dac4210 - 
-  // 6ae64b688c7d80b1a7a7a75ef8982993b7757200e5679d066ff3f19449403c = 
+  // 18a3ad8c5edb7debb667148a09abfefe685709ece99c39ae439bf8b8dac4210 -
+  // 6ae64b688c7d80b1a7a7a75ef8982993b7757200e5679d066ff3f19449403c =
   // 11f548d5d613a5e09bec9a141a227c652cdfb2ccdb45bfdddc9cb99f96301d4
   left.data[0] = 0xe439bf8b8dac4210UL;
   left.data[1] = 0xe685709ece99c39aUL;
@@ -478,11 +486,11 @@ void test_sub_genfact_1() {
   ASSERT(0x11f548d5d613a5eUL == result.data[3]);
 }
 
-void test_sub_genfact_2() { 
+void test_sub_genfact_2() {
   UInt256 left, right, result;
 
-  // cdd11898c75b8bcc5d333428ca1c01f064ff8bad5d558095a47c83423acafd7 - 
-  // 411a13c74ef35b19eef07d63da91d84a23237937dd530f8d41382fede3c23a = 
+  // cdd11898c75b8bcc5d333428ca1c01f064ff8bad5d558095a47c83423acafd7 -
+  // 411a13c74ef35b19eef07d63da91d84a23237937dd530f8d41382fede3c23a =
   // c9bf775c526c561abe442c528c72e46bc2cd5419df804f9cd06900435c8ed9d
   left.data[0] = 0x5a47c83423acafd7UL;
   left.data[1] = 0x064ff8bad5d55809UL;
@@ -539,11 +547,11 @@ void test_mul_2(TestObjs *objs) {
   ASSERT(0x991f2125eacd3UL == result.data[3]);
 }
 
-void test_mul_genfact_1() { 
+void test_mul_genfact_1() {
   UInt256 left, right, result;
 
-  // 2fa069a56ab19b5a2980d469e30a337 * 
-  // f22c1f9954d30055f28b6921e6d13fa = 
+  // 2fa069a56ab19b5a2980d469e30a337 *
+  // f22c1f9954d30055f28b6921e6d13fa =
   // 2d0dd9517abc4b1b8c6c8da9e611d71089160bfd60adb8b47271e8080778b6
   left.data[0] = 0xa2980d469e30a337UL;
   left.data[1] = 0x2fa069a56ab19b5UL;
@@ -560,11 +568,11 @@ void test_mul_genfact_1() {
   ASSERT(0x2d0dd9517abc4bUL == result.data[3]);
 }
 
-void test_mul_genfact_2() { 
+void test_mul_genfact_2() {
   UInt256 left, right, result;
 
-  // 3bc67a0b2f5be075e31640d220e711c * 
-  // 541e8507868308b0e8ef980621a5b94 = 
+  // 3bc67a0b2f5be075e31640d220e711c *
+  // 541e8507868308b0e8ef980621a5b94 =
   // 13a4405dd81754cdd49fb126aa68bab088868b900219268c42497707665830
   left.data[0] = 0x5e31640d220e711cUL;
   left.data[1] = 0x3bc67a0b2f5be07UL;
@@ -579,4 +587,46 @@ void test_mul_genfact_2() {
   ASSERT(0xb088868b90021926UL == result.data[1]);
   ASSERT(0xcdd49fb126aa68baUL == result.data[2]);
   ASSERT(0x13a4405dd81754UL == result.data[3]);
+}
+
+void test_mul_genfact_3() {
+  UInt256 left, right, result;
+
+  // f8e143880643e1b27065f7aecba3a6a *
+  // 8451d3714b47b41319cd80c84c658a5 =
+  // 80a3b3a8508c9c62ac3fe702f12c7c002920b21a0ab027afad16ba6e181652
+  right.data[0] = 0x27065f7aecba3a6aUL;
+  right.data[1] = 0xf8e143880643e1bUL;
+  right.data[2] = 0UL;
+  right.data[3] = 0UL;
+  left.data[0] = 0x319cd80c84c658a5UL;
+  left.data[1] = 0x8451d3714b47b41UL;
+  left.data[2] = 0UL;
+  left.data[3] = 0UL;
+  result = uint256_mul(left, right);
+  ASSERT(0xafad16ba6e181652UL == result.data[0]);
+  ASSERT(0x002920b21a0ab027UL == result.data[1]);
+  ASSERT(0x62ac3fe702f12c7cUL == result.data[2]);
+  ASSERT(0x80a3b3a8508c9cUL == result.data[3]);
+}
+
+void test_mul_genfact_4() {
+  UInt256 left, right, result;
+
+  // e409935d588addeca5e84c094d01577 *
+  // 5db792507f26718855c7a2c5721f2a6 =
+  // 537affb66b31063754b9d5ff38fc41ba31be8f9926a12c69f06e1f688f692a
+  right.data[0] = 0xa5e84c094d01577UL;
+  right.data[1] = 0xe409935d588addecUL;
+  right.data[2] = 0UL;
+  right.data[3] = 0UL;
+  left.data[0] = 0x55c7a2c5721f2a6UL;
+  left.data[1] = 0x5db792507f267188UL;
+  left.data[2] = 0UL;
+  left.data[3] = 0UL;
+  result = uint256_mul(left, right);
+  ASSERT(0x69f06e1f688f692aUL == result.data[0]);
+  ASSERT(0xba31be8f9926a12cUL == result.data[1]);
+  ASSERT(0x3754b9d5ff38fc41UL == result.data[2]);
+  ASSERT(0x537affb66b3106UL == result.data[3]);
 }

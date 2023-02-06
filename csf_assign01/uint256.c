@@ -121,7 +121,7 @@ UInt256 leftshift(UInt256 val, int shift) {
   // Copy all bits shift positions forward
   for (int i = 0; i < 256; ++i) {
     if (i + shift >= 256)
-      continue;
+      break;
 
     int repIndex = (i + shift) / 64;
     int repExtra = (i + shift) % 64;
@@ -129,9 +129,7 @@ UInt256 leftshift(UInt256 val, int shift) {
     int curBit = ith_bit_set(val, i);
     int repBit = ith_bit_set(val, i + shift);
 
-    if (curBit == repBit)
-      continue;
-    else if (curBit)
+    if (curBit)
       res.data[repIndex] |= 1UL << repExtra;
     else
       res.data[repIndex] &= ~(1UL << repExtra);
