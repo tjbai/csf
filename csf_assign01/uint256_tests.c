@@ -51,6 +51,9 @@ void test_sub_genfact_2();
 void test_mul_genfact_1();
 void test_mul_genfact_2();
 void test_sub_itself(TestObjs *objs);
+void test_create_from_hex_longer_than_64();
+void test_create_from_hex_shorter_than_64();
+
 
 int main(int argc, char **argv) {
   if (argc > 1) {
@@ -83,6 +86,9 @@ int main(int argc, char **argv) {
   TEST(test_mul_genfact_1);
   TEST(test_mul_genfact_2);
   TEST(test_sub_itself);
+  TEST(test_create_from_hex_longer_than_64);
+  TEST(test_create_from_hex_longer_than_64);
+
 
   TEST_FINI();
 }
@@ -172,6 +178,24 @@ void test_create_from_hex(TestObjs *objs) {
   ASSERT(check(val, 0x0UL, 0x0UL, 0x0UL, 0xcafeUL));
 }
 
+void test_create_from_hex_longer_than_64() {
+  UInt256 val;
+  val = uint256_create_from_hex("9c6037f9119d850b26d16149ad06ebc03e1d75da171ad209df383b10d5237d12f12de");
+  ASSERT(12757943719096685278UL == val.data[0]);
+  ASSERT(6746798705168216963UL == val.data[1]);
+  ASSERT(1484728201191350743UL == val.data[2]);
+  ASSERT(9192156731297393942UL == val.data[3]);
+}
+
+void test_create_from_hex_shorter_than_64() {
+  UInt256 val;
+  val = uint256_create_from_hex("19571d4e351c4ebb9119b2fa7ee235aada709ec41f986");
+  ASSERT(6534062295444748678UL == val.data[0]);
+  ASSERT(16985626827821674019UL == val.data[1]);
+  ASSERT(445791112221124UL == val.data[2]);
+  ASSERT(0UL == val.data[3]);
+}
+
 void test_format_as_hex(TestObjs *objs) {
   char *s;
 
@@ -183,6 +207,8 @@ void test_format_as_hex(TestObjs *objs) {
   ASSERT(0 == strcmp("1", s));
   free(s);
 }
+
+
 
 void test_add_0(TestObjs *objs) {
   UInt256 left, right, result;
