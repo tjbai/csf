@@ -1,3 +1,10 @@
+/*
+ * UInt256 Operations
+ * CSF Assignment 1
+ * TJ Bai and Halle Cho
+ * tbai4@jhu.edu, hcho64@jhu.edu
+ */
+
 #ifndef UINT256_H
 #define UINT256_H
 
