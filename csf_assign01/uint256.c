@@ -151,7 +151,7 @@ UInt256 leftshift(UInt256 val, int shift) {
   }
 
   return res;
-} 
+}
 // write small unit tests for left shift
 // multiply number by 2
 // test shifts > 64

@@ -198,6 +198,8 @@ void test_create_from_hex(TestObjs *objs) {
 }
 
 void test_create_from_hex_longer_than_64() {
+  // call create_from_hex on a string longer than 64
+
   UInt256 val;
   val = uint256_create_from_hex(
       "9c6037f9119d850b26d16149ad06ebc03e1d75da171ad209df383b10d5237d12f12de");
@@ -208,6 +210,8 @@ void test_create_from_hex_longer_than_64() {
 }
 
 void test_create_from_hex_shorter_than_64() {
+  // call create_from_hex on a string shorter than 64
+
   UInt256 val;
   val =
       uint256_create_from_hex("19571d4e351c4ebb9119b2fa7ee235aada709ec41f986");
@@ -230,6 +234,8 @@ void test_format_as_hex(TestObjs *objs) {
 }
 
 void test_add_0(TestObjs *objs) {
+  // test adding 0 to number doesn't change value
+
   UInt256 left, result;
 
   // 4db67a5fd770167f0139fb6587483f8e5f32efea965da9cf7a11076cbe01c70 +
@@ -327,6 +333,8 @@ void test_add_3(TestObjs *objs) {
 }
 
 void test_add_positive_overflow(TestObjs *objs) {
+  // Adding 1 to maximum value results in 0
+
   UInt256 left = {{~(0UL), ~(0UL), ~(0UL), ~(0UL)}};
   UInt256 res = uint256_add(left, objs->one);
   for (int i = 0; i < 4; ++i) {
@@ -488,6 +496,8 @@ void test_sub_itself(TestObjs *objs) {
 }
 
 void test_sub_negative_overflow(TestObjs *objs) {
+  // Subtracting 1 from zero results in UInt256 max value
+
   UInt256 res = uint256_sub(objs->zero, objs->one);
   for (int i = 0; i < 4; ++i) {
     ASSERT(~(0UL) == res.data[i]);
@@ -555,6 +565,8 @@ void test_mul_1(TestObjs *objs) {
 }
 
 void test_mul_1_big(TestObjs *objs) {
+  // test multiplying by 1 preserves identity
+
   UInt256 left, result;
 
   // 1159b14e3e852321ede4512ddf84eab524a34e431a9308de2b4b9e16b54ae0 * 1
@@ -571,6 +583,8 @@ void test_mul_1_big(TestObjs *objs) {
 }
 
 void test_mul_0_big(TestObjs *objs) {
+  // test multiplying by 0 results in 0
+
   UInt256 right, result;
 
   // 1159b14e3e852321ede4512ddf84eab524a34e431a9308de2b4b9e16b54ae0 * 1
@@ -688,6 +702,8 @@ void test_format_as_big_hex() {
 }
 
 void test_format_as_hex_shorter_than_64() {
+  // Test that formatting hex has no leading 0s
+
   char *s;
   UInt256 val;
   val.data[0] = 0x7a055816a0ae11b7UL;
@@ -699,29 +715,3 @@ void test_format_as_hex_shorter_than_64() {
   ASSERT(0 == strcmp("cd8c5e6af3a54677a055816a0ae11b7", s));
   free(s);
 }
-
-// void test_mul_genfact_4() {
-//   UInt256 left, right, result;
-
-//   // e409935d588addeca5e84c094d01577 *
-//   // 5db792507f26718855c7a2c5721f2a6 =
-//   // 537affb66b31063754b9d5ff38fc41ba31be8f9926a12c69f06e1f688f692a
-//   right.data[0] = 0xa5e84c094d01577UL;
-//   right.data[1] = 0xe409935d588addecUL;
-//   right.data[2] = 0UL;
-//   right.data[3] = 0UL;
-//   left.data[0] = 0x55c7a2c5721f2a6UL;
-//   left.data[1] = 0x5db792507f267188UL;
-//   left.data[2] = 0UL;
-//   left.data[3] = 0UL;
-//   result = uint256_mul(left, right);
-//   printf("%s", uint256_format_as_hex(result));
-//   ASSERT(0x69f06e1f688f692aUL == result.data[0]);
-//   ASSERT(0xba31be8f9926a12cUL == result.data[1]);
-//   ASSERT(0x3754b9d5ff38fc41UL == result.data[2]);
-//   ASSERT(0x537affb66b3106UL == result.data[3]);
-//   // 537affb66b310636
-//   // d426cdff38a6a465
-//   // 9fda0856ef178f98
-//   // 69f06e1f688f692a
-// }
