@@ -1,3 +1,10 @@
+/*
+ * UInt256 Operations
+ * CSF Assignment 1
+ * TJ Bai and Halle Cho
+ * tbai4@jhu.edu, hcho64@jhu.edu
+ */
+
 #include "uint256.h"
 #include <assert.h>
 #include <stdio.h>
@@ -18,10 +25,10 @@ UInt256 uint256_create(const uint64_t data[4]) {
   return (UInt256){{data[0], data[1], data[2], data[3]}};
 }
 
-int is_dig(char c) { return c >= '0' && c <= '9'; }
-
+// Returns the min of two numbers
 int min(int a, int b) { return a > b ? a : b; }
 
+// Returns the ceiling of a float number
 int ceiling(float f) {
   int i = (int)f;
   if (i == f) {
@@ -30,6 +37,7 @@ int ceiling(float f) {
   return i + 1;
 }
 
+// Copies 16 characters from the source string into a buffer
 void copy_substring(char *buffer, const char *source, int offset) {
   for (int i = 15; i >= 0; --i) {
     buffer[i] = offset + i >= 0 ? source[offset + i] : '0';
@@ -110,11 +118,13 @@ UInt256 uint256_sub(UInt256 left, UInt256 right) {
   return uint256_add(left, invertedRight);
 }
 
+// Checks if the ith bit is set in a UInt256. i ranges from 0 to 255.
 int ith_bit_set(UInt256 val, int i) {
   int index = i / 64, extra = i % 64;
   return (val.data[index] & (1UL << extra)) != 0;
 }
 
+// Perform left shift operatioin on UInt256. shift ranges from 0 to 255.
 UInt256 leftshift(UInt256 val, int shift) {
   UInt256 res = uint256_create(val.data);
 
