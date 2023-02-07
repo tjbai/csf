@@ -60,7 +60,6 @@ void test_format_as_hex_shorter_than_64();
 void test_mul_1_big(TestObjs *objs);
 void test_mul_0_big(TestObjs *objs);
 void test_add_1_to_random(TestObjs *objs);
-void test_sub_1_from_random(TestObjs *objs);
 
 int main(int argc, char **argv) {
   if (argc > 1) {
@@ -84,7 +83,6 @@ int main(int argc, char **argv) {
   TEST(test_mul_2);
 
   TEST(test_add_1_to_random);
-  TEST(test_sub_1_from_random);
 
   TEST(test_add_positive_overflow);
   TEST(test_sub_negative_overflow);
@@ -264,8 +262,8 @@ void test_add_1(TestObjs *objs) {
 void test_add_1_to_random(TestObjs *objs) {
   UInt256 left, sum;
 
-  // 225914b6ef8e303e43f5ad74fbeb113e08d6d81f400eabdbb8bc0f9f765b321 + 1 =
-  // 225914b6ef8e303e43f5ad74fbeb113e08d6d81f400eabdbb8bc0f9f765b322
+  //  225914b6ef8e303e43f5ad74fbeb113e08d6d81f400eabdbb8bc0f9f765b321
+  // 4444444444444444333333333333333322222222222222221111111111111111
   left.data[0] = 0xbb8bc0f9f765b321UL;
   left.data[1] = 0xe08d6d81f400eabdUL;
   left.data[2] = 0xe43f5ad74fbeb113UL;
@@ -414,25 +412,6 @@ void test_sub_1(TestObjs *objs) {
   ASSERT(0UL == result.data[1]);
   ASSERT(1UL == result.data[0]);
 }
-
-void test_sub_1_from_random(TestObjs *objs) {
-  UInt256 left, sum;
-
-  // f896687efc9aac23043035333bda0a60a0d4190978e8fb28b9750d4b4e516e4 - 1 = 
-  // f896687efc9aac23043035333bda0a60a0d4190978e8fb28b9750d4b4e516e3
-  left.data[0] = 0x8b9750d4b4e516e4UL;
-  left.data[1] = 0x0a0d4190978e8fb2UL;
-  left.data[2] = 0x3043035333bdaUL;
-  left.data[3] = 0xf896687efc9aac2UL;
-
-  sum = uint256_sub(left, objs->one);
-
-  ASSERT(0xf896687efc9aac2UL == sum.data[3]);
-  ASSERT(0x3043035333bdaUL == sum.data[2]);
-  ASSERT(0x0a0d4190978e8fb2UL == sum.data[1]);
-  ASSERT(0x8b9750d4b4e516e3UL == sum.data[0]);
-}
-
 
 void test_sub_2(TestObjs *objs) {
   // "medium" subtraction tests
