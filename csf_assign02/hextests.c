@@ -46,10 +46,8 @@ int main(int argc, char **argv) {
 }
 
 void testFormatOffset(TestObjs *objs) {
-<<<<<<< HEAD
-=======
   (void)objs;
->>>>>>> 639655dc39822538b5b2ac5c9ff9ea0fc8b50600
+  
   char buf[16];
   hex_format_offset(0x00000001u, buf);
   ASSERT(0 == strcmp(buf, "00000001"));
