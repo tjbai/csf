@@ -23,7 +23,8 @@ void hex_write_string(const char s[]) {
 void hex_format_offset(unsigned offset, char sbuf[]) {
   sbuf[8] = '\0';
   for (int i = 7; i >= 0; --i) {
-    sbuf[i] = (offset & 0xF) + '0';
+    int ls4 = (offset & 0xF);
+    sbuf[i] = ls4 < 10 ? '0' + ls4 : 'a' + ls4 - 10;
     offset >>= 4;
   }
 }
@@ -38,6 +39,5 @@ char hex_to_printable(unsigned char byteval) {
   if (byteval >= 32 && byteval <= 126) {
     return (char)byteval;
   }
-
   return '.';
 }
