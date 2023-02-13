@@ -12,12 +12,7 @@ void hex_write_string(const char s[]) {
   while (s[len] != '\0')
     ++len;
 
-  char sbuf[len];
-  for (int i = 0; i < len; ++i) {
-    sbuf[i] = hex_to_printable(s[i]);
-  }
-
-  write(STDOUT_FILENO, sbuf, len);
+  write(STDOUT_FILENO, s, len);
 }
 
 void hex_format_offset(unsigned offset, char sbuf[]) {
@@ -30,7 +25,6 @@ void hex_format_offset(unsigned offset, char sbuf[]) {
 }
 
 void hex_format_byte_as_hex(unsigned char byteval, char sbuf[]) {
-  sbuf[2] = '\0';
   for (int i = 1; i >= 0; --i) {
     int ls4 = (byteval & 0xF);
     sbuf[i] = ls4 < 10 ? '0' + ls4 : 'a' + ls4 - 10;
