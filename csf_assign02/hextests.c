@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
 }
 
 void testFormatOffset(TestObjs *objs) {
-  (void)objs; // suppress warning about unused parameter
+  (void)objs;
   char buf[16];
   hex_format_offset(0x00000001u, buf);
   ASSERT(0 == strcmp(buf, "00000001"));
@@ -57,9 +57,24 @@ void testFormatByteAsHex(TestObjs *objs) {
   char buf[16];
   hex_format_byte_as_hex(objs->test_data_1[0], buf);
   ASSERT(0 == strcmp(buf, "48"));
+
+  hex_format_byte_as_hex('a', buf);
+  ASSERT(0 == strcmp(buf, "61"));
+
+  hex_format_byte_as_hex(' ', buf);
+  ASSERT(0 == strcmp(buf, "20"));
+
+  hex_format_byte_as_hex('\0', buf);
+  ASSERT(0 == strcmp(buf, "00"));
+
+  hex_format_byte_as_hex(':', buf);
+  ASSERT(0 == strcmp(buf, "3a"));
 }
 
 void testHexToPrintable(TestObjs *objs) {
   ASSERT('H' == hex_to_printable(objs->test_data_1[0]));
+  ASSERT('f' == hex_to_printable('f'));
+  ASSERT('.' == hex_to_printable('\t'));
+  ASSERT('.' == hex_to_printable('\0'));
   ASSERT('.' == hex_to_printable(objs->test_data_1[13]));
 }

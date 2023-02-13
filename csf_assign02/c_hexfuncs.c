@@ -30,9 +30,12 @@ void hex_format_offset(unsigned offset, char sbuf[]) {
 }
 
 void hex_format_byte_as_hex(unsigned char byteval, char sbuf[]) {
-  sbuf[1] = (byteval & 0xF) + '0';
-  byteval >>= 4;
-  sbuf[0] = (byteval & 0xF) + '0';
+  sbuf[2] = '\0';
+  for (int i = 1; i >= 0; --i) {
+    int ls4 = (byteval & 0xF);
+    sbuf[i] = ls4 < 10 ? '0' + ls4 : 'a' + ls4 - 10;
+    byteval >>= 4;
+  }
 }
 
 char hex_to_printable(unsigned char byteval) {
