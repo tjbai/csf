@@ -6,24 +6,53 @@
 
 	.section .text
 
-	/* TODO: add functions here */
-
 	.globl hex_to_printable
 hex_to_printable:
-	cmpb $32,%dil 
-	jb .Lnot_printable
-	cmpb $126,%dil
-	ja .Lnot_printable 
-	movb %dil,%al 
+	cmpb $32,%dil  			/* compare character to 32 */
+	jb .Lnot_printable		/* if character less than 32, it is not printable */
+	cmpb $126,%dil			/* compare character to 126 */
+	ja .Lnot_printable 		/* if character greater than 126, it is not printable */
+	movb %dil,%al 			/* if 32 <= character <= 126, then return character */
 	ret 
 
 .Lnot_printable:
-	movb $46,%al 
+	movb $46,%al 			/* if character is not printable, then return '.' == 46 */
 	ret 
+
 
 	.globl hex_format_byte_as_hex
 hex_format_byte_as_hex:
-	ret
+	movb %dil,%r10b 	    /* copy byteval into r10 */
+	movq $1,%r11    		/* initialize r11 with 1 */
+
+.Lmain:
+	andb $0xF,%r10b 		/* bitmask with 0xF for least-significant 4 digits */
+	cmpb $10,%r10b			/* compare value with 10 */
+	jb .Ldigit 				/* if value is less than 10, then we insert a digit */
+	jmp .Lletter			/* otherwise, we insert a letter */
+
+.Ldigit:
+	addb $48,%r10b			/* add 48 to r10, equivalent to offsetting by '0' */
+	movb %r10b,(%rsi,%r11)  /* copy r10 into input buffer at index r11 */
+	jmp .Lcheck				/* jump to check section */
+
+.Lletter:				
+	addb $87,%r10b			/* add 87 to r10, equivalent to offsetting by 'a' */
+	movb %r10b,(%rsi,%r11)  /* copy r10 into input buffer at index r11 */
+	jmp .Lcheck				/* jump to check section */
+
+.Lcheck:			
+	cmpq $0,%r11 			/* compare r11 to 0 */
+	jg .Lshift				/* if r11 is greater than 0, then continue */
+	ret						/* otherwise, we have parsed the entire byte */
+
+.Lshift:
+	decq %r11 				/* decrement r11 */
+	movb %dil,%r10b			/* copy byteval into r10 again, resetting value */
+	shrb $4,%r10b			/* right-shift r10 by 4 places */
+	jmp .Lmain 				/* repeat from main */
+
+
 
 	.globl hex_format_offset
 hex_format_offset:
