@@ -11,7 +11,6 @@ void hex_write_string(const char s[]) {
   int len = 0;
   while (s[len] != '\0')
     ++len;
-
   write(STDOUT_FILENO, s, len);
 }
 
@@ -33,8 +32,7 @@ void hex_format_byte_as_hex(unsigned char byteval, char sbuf[]) {
 }
 
 char hex_to_printable(unsigned char byteval) {
-  if (byteval >= 32 && byteval <= 126) {
+  if (byteval >= 32 && byteval <= 126)
     return (char)byteval;
-  }
   return '.';
 }
