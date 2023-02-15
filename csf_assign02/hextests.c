@@ -4,7 +4,6 @@
 
 #include "hexfuncs.h"
 #include "tctest.h"
-#include <stdio.h>
 #include <stdlib.h>
 
 // test fixture object
@@ -90,4 +89,7 @@ void testHexToPrintable(TestObjs *objs) {
   ASSERT('.' == hex_to_printable('\t'));
   ASSERT('.' == hex_to_printable('\0'));
   ASSERT('.' == hex_to_printable(objs->test_data_1[13]));
+  ASSERT('.' == hex_to_printable(200));
+  ASSERT(46 == hex_to_printable(255));
+  ASSERT(34 == hex_to_printable(34));
 }
