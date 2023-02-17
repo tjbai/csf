@@ -1,6 +1,13 @@
-// Unit tests for hex functions
-// These tests should work for both your C implementations and your
-// assembly language implementations
+/*
+ * Unit tests for hex functions
+ * These tests should work for both your C implementations and your
+ * assembly language implementations
+ * CSF Assignment 2
+ * TJ Bai
+ * tbai4@jhu.edu
+ * Halle Cho
+ * hcho64@jhu.edu
+ */
 
 #include "hexfuncs.h"
 #include "tctest.h"

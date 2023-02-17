@@ -1,4 +1,10 @@
-/* Assembly language implementation of hexdump functions */
+/* Assembly language implementation of hexdump functions 
+ * CSF Assignment 2
+ * TJ Bai
+ * tbai4@jhu.edu
+ * Halle Cho
+ * hcho64@jhu.edu
+*/
 
 	.section .rodata
 
