@@ -35,6 +35,7 @@ of two hex digits.  The string is stored in sbuf.
 hex_format_byte_as_hex:
 	movb %dil,%r10b 	    /* copy byteval (passed by dil) into r10 */
 	movq $1,%r11    		/* initialize r11 with 1 */
+	movb $0,2(%rsi)
 
 .Lmain:
 	andb $0xF,%r10b 		/* bitmask with 0xF for least-significant 4 digits */

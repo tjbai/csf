@@ -74,6 +74,9 @@ void testFormatByteAsHex(TestObjs *objs) {
   hex_format_byte_as_hex('a', buf);
   ASSERT(0 == strcmp(buf, "61"));
 
+  hex_format_byte_as_hex('A', buf);
+  ASSERT(0 == strcmp(buf, "41"));  
+
   hex_format_byte_as_hex(' ', buf);
   ASSERT(0 == strcmp(buf, "20"));
 
@@ -82,6 +85,18 @@ void testFormatByteAsHex(TestObjs *objs) {
 
   hex_format_byte_as_hex(':', buf);
   ASSERT(0 == strcmp(buf, "3a"));
+
+  hex_format_byte_as_hex(255, buf);
+  ASSERT(0 == strcmp(buf, "ff"));
+
+  hex_format_byte_as_hex('&', buf);
+  ASSERT(0 == strcmp(buf, "26"));
+
+  hex_format_byte_as_hex('{', buf);
+  ASSERT(0 == strcmp(buf, "7b"));
+
+  hex_format_byte_as_hex(128, buf);
+  ASSERT(0 == strcmp(buf, "80"));
 }
 
 void testHexToPrintable(TestObjs *objs) {
