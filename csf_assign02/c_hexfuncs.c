@@ -23,10 +23,10 @@ unsigned hex_read(char data_buf[]) {
   return (unsigned)read(STDIN_FILENO, data_buf, 16);
 }
 
-/* Write given nul-terminated string to standard output.
+/* Write given null-terminated string to standard output.
  *
  * Parameters:
- *   s - nul-terminated string
+ *   s - null-terminated string
  */
 void hex_write_string(const char s[]) {
   int len = 0;
@@ -57,13 +57,13 @@ void hex_format_offset(unsigned offset, char sbuf[]) {
  *
  * Parameters:
  *   byteval - byte value
- *   sbuf - location for byteval as string
+ *   sbuf - buffer to store hex representation of byteval
  */
 void hex_format_byte_as_hex(unsigned char byteval, char sbuf[]) {
   sbuf[2] = '\0';
   for (int i = 1; i >= 0; --i) {
     int ls4 = (byteval & 0x0F);
-    sbuf[i] = ls4 < 10 ? (char) '0' + ls4 : (char) 'a' + ls4 - 10;
+    sbuf[i] = ls4 < 10 ? (char)'0' + ls4 : (char)'a' + ls4 - 10;
     byteval >>= 4;
   }
 }
@@ -75,9 +75,9 @@ void hex_format_byte_as_hex(unsigned char byteval, char sbuf[]) {
  *
  * Parameters:
  *   byteval - byte value
- * 
+ *
  * Returns:
- *   unmodified if printable
+ *   byteval if printable
  *   '.' if not printable
  */
 char hex_to_printable(unsigned char byteval) {

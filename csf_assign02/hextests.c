@@ -1,7 +1,5 @@
 /*
  * Unit tests for hex functions
- * These tests should work for both your C implementations and your
- * assembly language implementations
  * CSF Assignment 2
  * TJ Bai
  * tbai4@jhu.edu
@@ -82,7 +80,7 @@ void testFormatByteAsHex(TestObjs *objs) {
   ASSERT(0 == strcmp(buf, "61"));
 
   hex_format_byte_as_hex('A', buf);
-  ASSERT(0 == strcmp(buf, "41"));  
+  ASSERT(0 == strcmp(buf, "41"));
 
   hex_format_byte_as_hex(' ', buf);
   ASSERT(0 == strcmp(buf, "20"));

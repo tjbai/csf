@@ -11,14 +11,14 @@ int main(void) {
 
   while ((just_read = hex_read(abuf))) {
 
-    // print offset
+    // write offset
     hex_format_offset(chars_read, sbuf);
     sbuf[8] = ':';
     sbuf[9] = ' ';
     sbuf[10] = '\0';
     hex_write_string(sbuf);
 
-    // print each character
+    // write each converted character
     int i = 0;
     for (; i < just_read; ++i) {
       hex_format_byte_as_hex((unsigned char)abuf[i], sbuf);
@@ -29,11 +29,12 @@ int main(void) {
       abuf[i] = hex_to_printable(abuf[i]);
     }
 
+    // fill the rest of line
+    sbuf[0] = ' ';
+    sbuf[1] = ' ';
+    sbuf[2] = ' ';
+    sbuf[3] = '\0';
     while (i < 16) {
-      sbuf[0] = ' ';
-      sbuf[1] = ' ';
-      sbuf[2] = ' ';
-      sbuf[3] = '\0';
       hex_write_string(sbuf);
       ++i;
     }
@@ -42,9 +43,11 @@ int main(void) {
     sbuf[1] = '\0';
     hex_write_string(sbuf);
 
+    // write original characters
     abuf[just_read] = '\0';
     hex_write_string(abuf);
 
+    // start new line
     sbuf[0] = '\n';
     sbuf[1] = '\0';
     hex_write_string(sbuf);
