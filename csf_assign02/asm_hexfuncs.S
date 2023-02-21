@@ -74,6 +74,37 @@ hex_format_byte_as_hex:
 
 	.globl hex_format_offset
 hex_format_offset:
+	movq %rdi,%r10 	    	/* copy offset (passed by dil) into r10 */
+	movq $7,%r11    		/* initialize r11 with 1 */
+	movq %r10,%r12			/* initialize r12 with r10 */
+	movb $0,8(%rsi)
+
+.Lmain_offset:
+	andq $0xF,%r10 			/* bitmask with 0xF for least-significant 4 digits */
+	cmpq $10,%r10			/* compare value with 10 */
+	jb .Ldigit_offset 				/* if value is less than 10, then we insert a digit */
+	jmp .Lletter_offset			/* otherwise, we insert a letter */
+
+.Ldigit_offset:
+	addq $48,%r10			/* add 48 to r10, equivalent to offsetting by '0' */
+	movq %r10,(%rsi,%r11)   /* copy r10 into input buffer (passed by rsi) at index r11 */
+	jmp .Lcheck_offset				/* jump to check section */
+
+.Lletter_offset:				
+	addq $87,%r10			/* add 87 to r10, equivalent to offsetting by 'a' */
+	movq %r10,(%rsi,%r11)   /* copy r10 into input buffer (passed by rsi) at index r11 */
+	jmp .Lcheck_offset				/* jump to check section */
+
+.Lcheck_offset:			
+	cmpq $0,%r11 			/* compare r11 to 0 */
+	jg .Lshift_offset				/* if r11 is greater than 0, then continue */
+	ret						/* otherwise, we have parsed the entire byte */
+
+.Lshift_offset:
+	decq %r11 				/* decrement r11 */
+	shrq $4,%r12			/* right-shift r12 */
+	movq %r12,%r10			/* copy byteval into r10 again, resetting value */
+	jmp .Lmain_offset 				/* repeat from main */
 	ret
 
 
