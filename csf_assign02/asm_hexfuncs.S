@@ -21,6 +21,23 @@ hex_read:
 	syscall
 	ret
 
+	.globl hex_write_string
+hex_write_string:
+	movq %rdi,%rsi
+	movq $1,%rdi
+	movq $1,%rax
+	xorq %rdx,%rdx
+
+.Lcompare:
+	movb (%rsi,%rdx),%r11b
+	cmpb $0,%r11b
+	je .Lwrite
+	incq %rdx
+	jmp .Lcompare
+
+.Lwrite:	
+	syscall
+	ret
 
 /* 
 Convert a byte value (in the range 0-255) to a printable character

@@ -31,6 +31,7 @@ void testFormatOffset(TestObjs *objs);
 void testFormatByteAsHex(TestObjs *objs);
 void testHexToPrintable(TestObjs *objs);
 void testRead();
+void testWrite();
 
 int main(int argc, char **argv) {
   if (argc > 1) {
@@ -39,7 +40,8 @@ int main(int argc, char **argv) {
 
   TEST_INIT();
 
-  TEST(testRead);
+  // TEST(testRead);
+  TEST(testWrite);
   // TEST(testFormatOffset);
   // TEST(testFormatByteAsHex);
   // TEST(testHexToPrintable);
@@ -55,6 +57,14 @@ void testRead() {
   unsigned res = hex_read(buf);
   printf("\nREAD IN THIS: %s\n", buf);
   printf("%u\n", res);
+}
+
+void testWrite() {
+  char buf[17];
+  unsigned res = hex_read(buf);
+  printf("\n");
+  buf[res] = '\0';
+  hex_write_string(buf);
 }
 
 void testFormatOffset(TestObjs *objs) {
