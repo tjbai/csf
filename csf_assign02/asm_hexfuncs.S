@@ -74,36 +74,38 @@ hex_format_byte_as_hex:
 
 	.globl hex_format_offset
 hex_format_offset:
-	movq %rdi,%r10 	    	/* copy offset (passed by dil) into r10 */
-	movq $7,%r11    		/* initialize r11 with 7 */
-	movq %r10,%r12			/* initialize r12 with r10 */
+	movl %edi,%r10d 	    	/* copy offset (passed by edi) into r10 */
+	movl $7,%r11d    		/* initialize r11 with 7 */
+	movb $4,%cl			/* initialize rax with 4 */
 	movb $0,8(%rsi)
 
 .Lmain_offset:
-	andq $0xF,%r10 			/* bitmask with 0xF for least-significant 4 digits */
-	cmpq $10,%r10			/* compare value with 10 */
+	andl $0xF,%r10d 			/* bitmask with 0xF for least-significant 4 digits */
+	cmpl $10,%r10d			/* compare value with 10 */
 	jb .Ldigit_offset 		/* if value is less than 10, then we insert a digit */
-	jmp .Lletter_offset		/* otherwise, we insert a letter */
+	jmp .Lletter_offset		/* otherwise, we insesrt a letter */
 
 .Ldigit_offset:
-	addq $48,%r10			/* add 48 to r10, equivalent to offsetting by '0' */
-	movq %r10,(%rsi,%r11)   /* copy r10 into input buffer (passed by rsi) at index r11 */
+	addl $48,%r10d			/* add 48 to r10, equivalent to offsetting by '0' */
+	movb %r10b,(%rsi,%r11)   /* copy r10 into input buffer (passed by rsi) at index r11 */
 	jmp .Lcheck_offset				/* jump to check section */
 
 .Lletter_offset:				
-	addq $87,%r10			/* add 87 to r10, equivalent to offsetting by 'a' */
-	movq %r10,(%rsi,%r11)   /* copy r10 into input buffer (passed by rsi) at index r11 */
+	addl $87,%r10d			/* add 87 to r10, equivalent to offsetting by 'a' */
+	movb %r10b,(%rsi,%r11)   /* copy r10 into input buffer (passed by rsi) at index r11 */
 	jmp .Lcheck_offset				/* jump to check section */
 
 .Lcheck_offset:			
-	cmpq $0,%r11 			/* compare r11 to 0 */
+	cmpl $0,%r11d 			/* compare r11 to 0 */
 	jg .Lshift_offset		/* if r11 is greater than 0, then continue */
 	ret						/* otherwise, we have parsed the entire byte */
 
 .Lshift_offset:
-	decq %r11 				/* decrement r11 */
-	shrq $4,%r12			/* right-shift r12 */
-	movq %r12,%r10			/* copy r12 into r10, resetting value */
+	decl %r11d 				/* decrement r11 */
+	movl %edi,%r10d			/* copy byteval into r10 again, resetting value */
+	shrl %cl,%r10d			/* right-shift r12 */
+	addb $4,%al
+	movb %al,%cl
 	jmp .Lmain_offset 		/* repeat from main */
 	ret
 
