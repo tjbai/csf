@@ -12,6 +12,15 @@
 
 	.section .text
 
+	.globl hex_read
+hex_read:
+	xorq %rax,%rax
+	movq %rdi,%rsi
+	movq $0,%rdi
+	movq $16,%rdx
+	syscall
+	ret
+
 
 /* 
 Convert a byte value (in the range 0-255) to a printable character
@@ -70,8 +79,11 @@ hex_format_byte_as_hex:
 	shrb $4,%r10b			/* right-shift r10 by 4 places */
 	jmp .Lmain 				/* repeat from main */
 
-
-
+/*
+Format an unsigned value as an offset string consisting of exactly 8
+hex digits.  The formatted offset is stored in sbuf, which must
+have enough room for a string of length 8.
+*/
 	.globl hex_format_offset
 hex_format_offset:
 	movl %edi,%r10d 	    	/* copy offset (passed by edi) into r10 */

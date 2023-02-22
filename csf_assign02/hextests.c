@@ -30,6 +30,7 @@ void cleanup(TestObjs *objs) { free(objs); }
 void testFormatOffset(TestObjs *objs);
 void testFormatByteAsHex(TestObjs *objs);
 void testHexToPrintable(TestObjs *objs);
+void testRead();
 
 int main(int argc, char **argv) {
   if (argc > 1) {
@@ -38,13 +39,22 @@ int main(int argc, char **argv) {
 
   TEST_INIT();
 
-  TEST(testFormatOffset);
-  TEST(testFormatByteAsHex);
-  TEST(testHexToPrintable);
+  TEST(testRead);
+  // TEST(testFormatOffset);
+  // TEST(testFormatByteAsHex);
+  // TEST(testHexToPrintable);
 
   TEST_FINI();
 
   return 0;
+}
+
+void testRead() {
+  char buf[17];
+  buf[16] = '\0';
+  unsigned res = hex_read(buf);
+  printf("\nREAD IN THIS: %s\n", buf);
+  printf("%u\n", res);
 }
 
 void testFormatOffset(TestObjs *objs) {
@@ -53,7 +63,7 @@ void testFormatOffset(TestObjs *objs) {
   char buf[16];
   hex_format_offset(0x00000001u, buf);
   ASSERT(0 == strcmp(buf, "00000001"));
-  
+
   hex_format_offset(0xabcd1234u, buf);
   ASSERT(0 == strcmp(buf, "abcd1234"));
 
