@@ -51,12 +51,10 @@ void testFormatOffset(TestObjs *objs) {
   (void)objs;
 
   char buf[16];
-  // hex_format_offset(0x00000001u, buf);
-  // printf("%s", buf);
-  // ASSERT(0 == strcmp(buf, "00000001"));
+  hex_format_offset(0x00000001u, buf);
+  ASSERT(0 == strcmp(buf, "00000001"));
   
   hex_format_offset(0xabcd1234u, buf);
-  printf("%s", buf);
   ASSERT(0 == strcmp(buf, "abcd1234"));
 
   hex_format_offset(0x1234abcdu, buf);
