@@ -7,16 +7,19 @@
 
 	.globl main
 main:	
-	pushq %r12 							/* represents total characters read */
-	pushq %r13							/* use to index for loops */
-	pushq %r14							/* use to store temporary values */
+	/* Push callee-saved registers */
+	pushq %r12 		/* represents total characters read */
+	pushq %r13		/* use to index for loops */
+	pushq %r14		/* use to store temporary values */
 	movq $0, %r12
 
-	pushq %rbp							/* align stack */
+	/* Align stack */
+	pushq %rbp							
 	movq %rsp, %rbp
 	subq $48, %rsp
 	
 .Lwhile_loop_top:
+	/* Read up to 16 characters from STDIN */
 	leaq ABUF_OFFSET(%rbp), %rdi	
 	call hex_read
 	cmpq $0, %rax
@@ -62,19 +65,21 @@ main:
 	incq %r13
 	jmp .Lfor_loop_top
 
-	/* Print whitespace to fill rest of line */
 .Lprint_remaining_whitespace:
+	/* Set SBUF to 3 spaces */
 	movq $32, (SBUF_OFFSET)(%rbp)
 	movq $32, (SBUF_OFFSET + 1)(%rbp)
 	movq $32, (SBUF_OFFSET + 2)(%rbp)
 	movq $0, (SBUF_OFFSET + 3)(%rbp)
 
 .Lprint_remaining_whitespace_loop:
+	/* Print SBUF until the end of line */
 	cmpq $16, %r13
 	jge .Lwhile_loop_bottom
 	leaq SBUF_OFFSET(%rbp), %rdi
 	call hex_write_string
-	
+
+	/* Increment r13 and repeat for loop */
 	incq %r13
 	jmp .Lprint_remaining_whitespace_loop
 
