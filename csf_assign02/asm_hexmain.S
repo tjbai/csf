@@ -56,7 +56,7 @@ main:
 	/* Replace character in ABUF with printable */
 	movq (ABUF_OFFSET)(%rbp,%r13), %rdi
 	call hex_to_printable
-	movq %rax, (ABUF_OFFSET)(%rbp,%r13)
+	movb %al, (ABUF_OFFSET)(%rbp,%r13)
 
 	/* Increment r13 and repeat for loop */
 	incq %r13
@@ -68,12 +68,13 @@ main:
 	movq $32, (SBUF_OFFSET + 1)(%rbp)
 	movq $32, (SBUF_OFFSET + 2)(%rbp)
 	movq $0, (SBUF_OFFSET + 3)(%rbp)
-	leaq (SBUF_OFFSET)(%rbp), %rdi
 
 .Lprint_remaining_whitespace_loop:
 	cmpq $16, %r13
 	jge .Lwhile_loop_bottom
+	leaq SBUF_OFFSET(%rbp), %rdi
 	call hex_write_string
+	
 	incq %r13
 	jmp .Lprint_remaining_whitespace_loop
 
