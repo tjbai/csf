@@ -1,4 +1,11 @@
-/* Hexdump main function, assembly language version */
+/*
+ * Assembly implementation of hexdump
+ * CSF Assignment 2
+ * TJ Bai
+ * tbai4@jhu.edu
+ * Halle Cho
+ * hcho64@jhu.edu
+ */
 
 	.section .text
 

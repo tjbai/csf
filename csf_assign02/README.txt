@@ -4,4 +4,4 @@ TJ Bai implemented and wrote tests primarily for hex_read, hex_write_string, and
 
 Halle Cho implemented and wrote tests primarily for hex_format_byte_as_hex and hex_to_printable.
 
-Both team members wrote the assembly functions with side-by-side coding.
+Both team members wrote the assembly functions and main with side-by-side coding.
