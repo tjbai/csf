@@ -1,7 +1,32 @@
+/*
+ * Cache simulation main function
+ * CSF Assignment 3
+ * TJ Bai
+ * tbai4@jhu.edu
+ * Halle Cho
+ * hcho64@jhu.edu
+ */
+
 #include <cstdio>
 #include <iostream>
 #include <string.h>
 #include <string>
+#include <unordered_map>
+#include <vector>
+
+struct Slot {
+  unsigned int tag, access_ts, load_ts;
+  bool valid;
+};
+
+struct Set {
+  // {tag, Slot}
+  std::unordered_map<unsigned int, Slot> slots;
+};
+
+struct Cache {
+  std::vector<Set> sets;
+};
 
 bool pow2(int val, int limit = 1) {
   if (val < limit)
@@ -33,11 +58,16 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
+  // allocate CACHE/SET/SLOTS here
+
+  unsigned int time = 0;
   std::string trace;
   char instruction;
   unsigned int address;
   while (std::getline(std::cin, trace)) {
     instruction = trace[0];
     address = std::stoul(trace.substr(2, 10), nullptr, 16);
+
+    ++time;
   }
 }
