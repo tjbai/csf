@@ -68,6 +68,8 @@ int main(int argc, char *argv[]) {
     instruction = trace[0];
     address = std::stoul(trace.substr(2, 10), nullptr, 16);
 
+    // START WITH JUST LOAD INSTRUCTIONS
+
     ++time;
   }
 }
