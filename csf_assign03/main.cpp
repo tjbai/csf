@@ -3,10 +3,9 @@
 #include <string.h>
 #include <string>
 
-bool pow_of_two(int val, int limit) {
+bool pow2(int val, int limit = 1) {
   if (val < limit)
     return false;
-
   return !(val & (val - 1));
 }
 
@@ -20,15 +19,13 @@ int main(int argc, char *argv[]) {
   int blocks_per_set = std::stoi(argv[2]);
   int bytes_per_block = std::stoi(argv[3]);
 
-  if (!(pow_of_two(set_count, 1) && pow_of_two(blocks_per_set, 1) &&
-        pow_of_two(bytes_per_block, 4))) {
+  if (!(pow2(set_count) && pow2(blocks_per_set) && pow2(bytes_per_block, 4))) {
     std::cerr << "Invalid set/block/byte config" << std::endl;
     return 1;
   }
 
   bool write_allocate = !(strcmp(argv[4], "write-allocate"));
   bool write_back = !(strcmp(argv[5], "write-back"));
-  bool write_through = !write_back; // not necessary, just for semantics
   bool lru = !(strcmp(argv[6], "lru"));
 
   if (!write_allocate && write_back) {
