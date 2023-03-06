@@ -27,10 +27,11 @@ int main(int argc, char *argv[]) {
   }
 
   bool write_allocate = !(strcmp(argv[4], "write-allocate"));
-  bool write_through = !(strcmp(argv[5], "write-through"));
+  bool write_back = !(strcmp(argv[5], "write-back"));
+  bool write_through = !write_back; // not necessary, just for semantics
   bool lru = !(strcmp(argv[6], "lru"));
 
-  if (!write_allocate && !write_through) {
+  if (!write_allocate && write_back) {
     std::cerr << "Can't combine no-write-allocate with write-back" << std::endl;
     return 1;
   }
