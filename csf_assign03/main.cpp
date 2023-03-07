@@ -7,6 +7,7 @@
  * hcho64@jhu.edu
  */
 
+#include <cmath>
 #include <cstdio>
 #include <iostream>
 #include <string.h>
@@ -17,15 +18,6 @@
 struct Slot {
   unsigned int tag, access_ts, load_ts;
   bool valid;
-};
-
-struct Set {
-  // {tag, Slot}
-  std::unordered_map<unsigned int, Slot> slots;
-};
-
-struct Cache {
-  std::vector<Set> sets;
 };
 
 bool pow2(int val, int limit = 1) {
@@ -58,17 +50,21 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  // allocate CACHE/SET/SLOTS here
+  int offset_bits = log2(bytes_per_block);
+  int index_bits = log2(set_count);
+
+  std::vector<std::unordered_map<int, Slot>> cache(set_count);
 
   unsigned int time = 0;
   std::string trace;
-  char instruction;
-  unsigned int address;
   while (std::getline(std::cin, trace)) {
-    instruction = trace[0];
-    address = std::stoul(trace.substr(2, 10), nullptr, 16);
+    char instruction = trace[0];
+    int address = std::stoul(trace.substr(2, 10), NULL, 16);
 
-    // START WITH JUST LOAD INSTRUCTIONS
+    int index = (address >> offset_bits) & (set_count - 1);
+    int tag = address >> (offset_bits + index_bits);
+
+    // the block we care about is now cache[index][tag]
 
     ++time;
   }
