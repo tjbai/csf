@@ -25,7 +25,9 @@ typedef std::unordered_map<int, Slot> set_t;
 typedef std::vector<set_t> cache_t;
 
 bool pow2(int val, int limit = 1);
-void load_into_cache(set_t &set, int max_size, int time, int tag, bool lru);
+int erase_from_full_set(set_t &set, bool lru);
+void load_into_cache(set_t &set, int max_size, int time, 
+                    int tag, bool lru, int &cycle_count);
 
 int main(int argc, char *argv[]) {
   if (argc != 7) {
@@ -55,11 +57,14 @@ int main(int argc, char *argv[]) {
   int index_bits = log2(set_count);
 
   cache_t cache(set_count);
+  int load_count = 0, load_hit = 0;
+  int store_count = 0, store_hit = 0;
+  int cycle_count = 0;
 
   unsigned int time = 0;
   std::string trace;
 
-  // TODO: increment clock cycles here
+  // TODO: increment clock cycles
   while (std::getline(std::cin, trace)) {
     char instruction = trace[0];
     int address = std::stoul(trace.substr(2, 10), NULL, 16);
@@ -68,16 +73,16 @@ int main(int argc, char *argv[]) {
     int tag = address >> (offset_bits + index_bits);
 
     if (instruction == 'l') {
-      // load from cache
-      if (cache[index].count(tag))
-        continue;
-      // load from memory
-      else
-        continue;
-      // load_into_cache(cache[index], blocks_per_set, time, tag, lru);
+      ++load_count;
+      if (cache[index].count(tag)) {
+        ++load_hit;
+      }
+      else {
+        load_into_cache(cache[index], blocks_per_set, time, tag, lru, cycle_count);
+      }
     } else {
-      // FIXME: only does write-through and no-write-allocate
-      continue;
+      if (cache[index].count(tag)) continue;
+      else continue;
     }
 
     ++time;
@@ -85,28 +90,34 @@ int main(int argc, char *argv[]) {
 }
 
 bool pow2(int val, int limit) {
-  if (val < limit)
-    return false;
+  if (val < limit) return false;
   return !(val & (val - 1));
 }
 
-void load_into_cache(set_t &set, int max_size, int time, int tag, bool lru) {
-  if (set.size() == max_size) {
-    // Right now ONLY does LRU
-    int replacement_tag = -1;
-    int last_used_time = std::numeric_limits<int>::max();
+int erase_from_full_set(set_t &set, bool lru, int &cycle_count) {
+  // TODO: check for "dirty" bit
 
-    for (auto kv : set) {
-      if (kv.second.access_ts < last_used_time ||
-          kv.second.load_ts < last_used_time) {
-        replacement_tag = kv.first;
-        last_used_time = std::min(kv.second.access_ts, kv.second.load_ts);
-      }
+  int rep_tag = -1;
+  int last_used_time = std::numeric_limits<int>::max();
+
+  for (std::pair<int, Slot> kv : set) {
+    if (lru && kv.second.access_ts < last_used_time) {
+      rep_tag = kv.first;
+      last_used_time = kv.second.access_ts;
     }
 
-    // TODO: check dirtiness
-    set.erase(replacement_tag);
+    if (!lru && kv.second.load_ts < last_used_time) {
+      rep_tag = kv.first;
+      last_used_time = kv.second.load_ts;
+    }
   }
 
+  set.erase(rep_tag);
+  return rep_tag;
+} 
+
+void load_into_cache(set_t &set, int max_size, int time, 
+                    int tag, bool lru, int &cycle_count) {
+  if (set.size() == max_size) erase_from_full_set(set, lru);
   set[tag] = {time, time};
 }
