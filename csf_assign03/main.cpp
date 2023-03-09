@@ -8,13 +8,9 @@
  */
 
 #include <cmath>
-#include <cstdio>
 #include <iostream>
-#include <limits>
 #include <string.h>
 #include <string>
-#include <unordered_map>
-#include <vector>
 #include "cache.h"
 
 bool check_pow2(int val, int limit = 1);
