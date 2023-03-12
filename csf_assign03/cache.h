@@ -29,7 +29,6 @@ class Cache {
     void write_mem_to_cache(set_t &set, unsigned int tag, int time);
 
   public:
-    // Public constructor
     Cache(
       int set_count,
       int blocks_per_set,
