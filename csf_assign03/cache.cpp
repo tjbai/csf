@@ -73,11 +73,11 @@ void Cache::write_to_cache(unsigned int index, unsigned int tag, int time) {
     sets[index][tag].last_used_ts = time;
     sets[index][tag].dirty = write_back;
     ++store_hit;
-    cycle_count += 1 + (write_back ? 0 : (25 * bytes_per_block));
+    cycle_count += 1 + (write_back ? 0 : 100);
   }
   else {
     if (write_allocate) write_mem_to_cache(sets[index], tag, time);
-    cycle_count += 25 * bytes_per_block + write_allocate;
+    cycle_count += (write_back ? 0 : 100) + (write_allocate ? 25 * bytes_per_block : 0);
   }
 }
 
