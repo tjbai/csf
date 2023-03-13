@@ -1,6 +1,15 @@
 #include "cache.h"
 #include <limits>
 
+/*
+ * Write block of data from memory to cache
+ *
+ * Parameters:
+ *   set - memory address of set map
+ *   tag - tag of data block
+ *   time - timestamp of call
+ *
+ */
 void Cache::write_mem_to_cache(set_t &set, unsigned int tag, int time) {
   if ((int) set.size() == Cache::blocks_per_set) {
     int rep_tag = -1;
@@ -25,6 +34,15 @@ void Cache::write_mem_to_cache(set_t &set, unsigned int tag, int time) {
   set[tag] = {time, time, false}; 
 }
 
+/*
+ * Loads a black from cache with given index and tag and updates hit/miss and cycle count
+ *
+ * Parameters:
+ *   index - index in set
+ *   tag - tag of data block
+ *   time - timestamp
+ *
+ */
 void Cache::load_from_cache(unsigned int index, unsigned int tag, int time) {
   ++load_count;
 
@@ -39,6 +57,15 @@ void Cache::load_from_cache(unsigned int index, unsigned int tag, int time) {
   }
 }
 
+/*
+ * Writes a block of data to cache with given index and tag and updates hit/miss and cycle count
+ *
+ * Parameters:
+ *   index - index of block in set
+ *   tag - tag of data block
+ *   time - timestamp
+ *
+ */
 void Cache::write_to_cache(unsigned int index, unsigned int tag, int time) {
   ++store_count;
 
